@@ -1,0 +1,53 @@
+# Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of Code Aurora Forum, Inc. nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# mount point	fstype		device			[device2]
+
+# /* < DTS2012031506621  lishubin 20120321 begin */
+#/* use new partition order for some partition */
+#/* < DTS2012011906026 chendeng 20120120 begin */
+/boot		emmc		/dev/block/mmcblk0p12
+/cache		ext4		/dev/block/mmcblk0p15
+# /* < DTS2012062603367  lizhigang 20120626 begin */
+/data		ext4		/dev/block/mmcblk0p18   length=-16384
+#/* < DTS2012062603367 lizhigang 20120626 end */
+/recovery       emmc            /dev/block/mmcblk0p13
+/misc		emmc		/dev/block/mmcblk0p7
+#/sdcard		vfat		/dev/block/mmcblk1p1	/dev/block/mmcblk1
+/system		ext4		/dev/block/mmcblk0p17
+/sys_boot	vfat		/dev/block/mmcblk0p3
+/fat            vfat		/dev/block/mmcblk0p3
+#/HWUserData	vfat		/dev/block/mmcblk0p19
+#/*< DTS2012020804291 weizhonghui 20120208 begin */
+/cust		ext4		/dev/block/mmcblk0p16
+#/* DTS2012020804291 weizhonghui 20120208 end >*/
+#/* DTS2012011906026 chendeng 20120120 end > */
+# /* DTS2012031506621  lishubin 20120321 end > */
+# add by linkscue start, for support "install zip from sdcard"
+/sdcard			vfat		/dev/block/mmcblk0p19
+/internal_sd	vfat		/dev/block/mmcblk1p1	/dev/block/mmcblk1
+# add by linkscue end, for support "install zip from sdcard"

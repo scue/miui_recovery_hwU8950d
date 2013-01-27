@@ -1,0 +1,161 @@
+#/*< DTS2011050401479 liyuping 20110504  begin */
+on early-init
+    start ueventd
+
+on init
+
+    export PATH /sbin:/system/sbin:/system/bin:/system/xbin
+    export LD_LIBRARY_PATH /vendor/lib:/system/lib
+    export ANDROID_ROOT /system
+#/* <DTS2011082401751 renxigang 20110824 begin */
+#/* <DTS2011090506274 renxigang 20110906 begin */
+#/*delete 7 lines*/
+#/* DTS2011090506274  renxigang 20110906 end> */
+#/* DTS2011082401751  renxigang 20110824 end> */
+#/* < DTS2012031506621 lishubin 20120321 begin */
+on emmc-fs
+# mount mmc partitions
+    wait /dev/block/mmcblk0p17
+#/*< DTS2011062701420  weizhonghui 20110704 begin */
+#/*
+# */system must be rw when enter recovery
+# */fat is used to store update.app when hota update
+# */sdcard is used to mount external sdcard
+# */HWUserData is used to mount inner sdcard
+#*/
+#/*< DTS2012050905680 mazhenhua 20120510 begin*/
+#/*resize data system cust cache partitions to max size*/
+    exec /sbin/e2fsck_s -p /dev/block/mmcblk0p15
+    exec /sbin/resize2fs_s /dev/block/mmcblk0p15
+
+    exec /sbin/e2fsck_s -p /dev/block/mmcblk0p16
+    exec /sbin/resize2fs_s /dev/block/mmcblk0p16
+
+    exec /sbin/e2fsck_s -p /dev/block/mmcblk0p17
+    exec /sbin/resize2fs_s /dev/block/mmcblk0p17
+
+    exec /sbin/e2fsck_s -p /dev/block/mmcblk0p18
+    exec /sbin/resize2fs_s /dev/block/mmcblk0p18
+#/* DTS2012050905680 mazhenhua 20120510 end >*/
+
+    mount ext4 /dev/block/mmcblk0p17 /system rw barrier=1
+    mkdir fat
+    mkdir sdcard
+    mkdir HWUserData
+#/* DTS2011062701420  weizhonghui 20110704 end >*/
+#/* < DTS2012011906031 libeibei 20120116 begin */
+#/* for cust use. */
+    mkdir /.cust_backup
+    mkdir /cust 
+#/* DTS2012011906031 libeibei 20120116 end > */
+# /* DTS2012031506621 lishubin 20120321 end > */
+on boot
+
+    class_start default
+    chmod 0660 /dev/smd0
+    chown system system /dev/smd0
+#/* < DTS2012061204693 zhangmin 20120612 begin */
+#/*config the cpu for mode of ondemand*/
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor  "ondemand"
+#/* DTS2012061204693 zhangmin 20120612 end > */
+service ueventd     /sbin/ueventd
+service adbd        /sbin/adbd
+#/* < DTS2012021701388 guojing 20120217 begin */
+# remove after the oem_rpc_svc
+#/* DTS2012021701388 guojing 20120217 end > */
+#/* <DTS2011072400212 sibingsong 20110724 begin */
+service charge	/sbin/charge
+#/* DTS2011072400212 sibingsong 20110724 end> */
+#/* DTS2012020903425 guojing 20120209 begin */
+service test_diag /system/bin/test_diag
+#/* DTS2012020903425 guojing 20120209 end */
+#/* <DTS2012061107072 zhangzhengxue 20120611 begin */
+service atserver /system/bin/atserver
+    oneshot
+#/* DTS2012061107072 zhangzhengxue 20120611 end > */
+#/* < DTS2012011305204 libeibei 20120120 begin */
+service rmt_oeminfo /system/bin/rmt_oeminfo
+#/* < DTS2012021200408 libeibei 20120212 begin */
+# delete 1 line to start oeminfo.
+#/* DTS2012021200408 libeibei 20120211 end > */
+    oneshot
+#/* DTS2012011305204 libeibei 20120120 end > */
+service rmt_storage /system/bin/rmt_storage
+service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
+#/* < DTS2011060301396 weiheng 20110603 begin */
+#/* < add one process in recovery */
+#/* < DTS2011091002297 libeibei 20110910 begin */
+#/* don't load the wifi driver in recovery module. */
+#service bcm_loadipf-sh /system/bin/sh /system/wifi/bcm_loadipf.sh
+#	user root
+#	oneshot
+#/* DTS2011091002297 libeibei 20110910 end > */
+#/* DTS2011060301396 weiheng 20110603 end > */
+#/* DTS2011050401479 liyuping 20110504 end >*/
+#/*< DTS2011060302019 lihongbin 20110608 begin */
+#/* copy the dts DTS2011010604470 */
+service oem_rpc_svc /system/bin/oem_rpc_svc
+    oneshot
+#/* DTS2011060302019 lihongbin 20110608 end >*/ 
+
+#/*< DTS2011072001697  weizhonghui 20110720 begin */
+service huawei-sh /system/bin/sh /init.huawei.sh
+    user root
+    oneshot
+#/* DTS2011072001697  weizhonghui 20110720 end >*/
+
+#/* < DTS2012021701388 guojing 20120217 begin */
+service recovery    /sbin/recovery
+#/* DTS2012021701388 guojing 20120217 end > */
+
+#/* < DTS2012050204552 chenxi 20120502 begin */
+#/* to process the usb port switch uevent */
+service hw_scsi_switch /sbin/hw_scsi_switch
+#/* DTS2012050204552 chenxi 20120502 end > */
+
+# /*< DTS2012011801998 chenxi 20120203 begin */
+# /*< DTS2012022400909 chenxi 20120224 begin */
+# USB google mode configuration
+on property:sys.usb.config=mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1038
+    #/* < DTS2012051402235 chenxi 20120514 begin */
+    #/* do not use autorun.iso in recovery because HOTA may update this file */
+    #/* < DTS2012082908500 chenxi 20120829 begin */
+    write /sys/class/android_usb/android0/f_mass_storage/nluns $ro.hw.usb.google.nluns
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index $ro.hw.usb.google.cdrom
+    #/* DTS2012082908500 chenxi 20120829 end > */
+    #write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
+    #/* DTS2012051402235 chenxi 20120514 end > */
+    write /sys/class/android_usb/android0/functions $sys.usb.config
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
+
+# /* cleanup usb serial number for normal and factory mode */
+# USB normal mode configuration
+on property:sys.usb.config=serial,mass_storage,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.normal
+    write /sys/class/android_usb/android0/iSerial cleanup
+    write /sys/class/android_usb/android0/f_diag/clients  diag
+    write /sys/class/android_usb/android0/f_serial/transports smd,smd
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
+    /* < DTS2012051402235 chenxi 20120514 begin */
+    #/* do not use autorun.iso in recovery because HOTA may update this file */
+    #write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
+    /* DTS2012051402235 chenxi 20120514 end > */
+    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
+# /* DTS2012022400909 chenxi 20120224 end > */
+
+# Used to set USB configuration at boot and to switch the configuration
+# when changing the default configuration
+on property:persist.sys.usb.config=*
+    setprop sys.usb.config $persist.sys.usb.config
+# /* DTS2012011801998 chenxi 20120203 end >*/
