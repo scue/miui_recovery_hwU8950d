@@ -38,7 +38,7 @@ on emmc-fs
     exec /sbin/resize2fs_s /dev/block/mmcblk0p18
 #/* DTS2012050905680 mazhenhua 20120510 end >*/
 
-    mount ext4 /dev/block/mmcblk0p17 /system rw barrier=1
+#    mount ext4 /dev/block/mmcblk0p17 /system rw barrier=1
     mkdir fat
     mkdir sdcard
     mkdir HWUserData
@@ -67,21 +67,21 @@ service adbd        /sbin/adbd
 service charge	/sbin/charge
 #/* DTS2011072400212 sibingsong 20110724 end> */
 #/* DTS2012020903425 guojing 20120209 begin */
-service test_diag /system/bin/test_diag
+#service test_diag /system/bin/test_diag
 #/* DTS2012020903425 guojing 20120209 end */
 #/* <DTS2012061107072 zhangzhengxue 20120611 begin */
-service atserver /system/bin/atserver
+#service atserver /system/bin/atserver
     oneshot
 #/* DTS2012061107072 zhangzhengxue 20120611 end > */
 #/* < DTS2012011305204 libeibei 20120120 begin */
-service rmt_oeminfo /system/bin/rmt_oeminfo
+#service rmt_oeminfo /system/bin/rmt_oeminfo
 #/* < DTS2012021200408 libeibei 20120212 begin */
 # delete 1 line to start oeminfo.
 #/* DTS2012021200408 libeibei 20120211 end > */
     oneshot
 #/* DTS2012011305204 libeibei 20120120 end > */
-service rmt_storage /system/bin/rmt_storage
-service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
+#service rmt_storage /system/bin/rmt_storage
+#service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
 #/* < DTS2011060301396 weiheng 20110603 begin */
 #/* < add one process in recovery */
 #/* < DTS2011091002297 libeibei 20110910 begin */
@@ -94,12 +94,12 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
 #/* DTS2011050401479 liyuping 20110504 end >*/
 #/*< DTS2011060302019 lihongbin 20110608 begin */
 #/* copy the dts DTS2011010604470 */
-service oem_rpc_svc /system/bin/oem_rpc_svc
-    oneshot
+#service oem_rpc_svc /system/bin/oem_rpc_svc
+#    oneshot
 #/* DTS2011060302019 lihongbin 20110608 end >*/ 
 
 #/*< DTS2011072001697  weizhonghui 20110720 begin */
-service huawei-sh /system/bin/sh /init.huawei.sh
+#service huawei-sh /system/bin/sh /init.huawei.sh
     user root
     oneshot
 #/* DTS2011072001697  weizhonghui 20110720 end >*/
