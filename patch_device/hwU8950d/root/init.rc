@@ -100,8 +100,8 @@ service charge	/sbin/charge
 
 #/*< DTS2011072001697  weizhonghui 20110720 begin */
 #service huawei-sh /system/bin/sh /init.huawei.sh
-    user root
-    oneshot
+#    user root
+#    oneshot
 #/* DTS2011072001697  weizhonghui 20110720 end >*/
 
 #/* < DTS2012021701388 guojing 20120217 begin */
